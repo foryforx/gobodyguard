@@ -2,6 +2,21 @@
 
 
 [[projects]]
+  name = "github.com/amacneil/dbmate"
+  packages = [
+    ".",
+    "pkg/dbmate"
+  ]
+  revision = "abc544b368ed5ab30a69e44a991391b5a9326d77"
+  version = "v1.4.1"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/go-sql-driver/mysql"
+  packages = ["."]
+  revision = "c0f6b444ad8f92ecd68f86b27635c1fccdede4c4"
+
+[[projects]]
   name = "github.com/jinzhu/gorm"
   packages = ["."]
   revision = "472c70caa40267cb89fd8facb07fe6454b578626"
@@ -14,10 +29,31 @@
   revision = "04140366298a54a039076d798123ffa108fff46c"
 
 [[projects]]
+  name = "github.com/joho/godotenv"
+  packages = ["."]
+  revision = "23d116af351c84513e1946b527c88823e476be13"
+  version = "v1.3.0"
+
+[[projects]]
   name = "github.com/konsorten/go-windows-terminal-sequences"
   packages = ["."]
   revision = "f55edac94c9bbba5d6182a4be46d86a2c9b5b50e"
   version = "v1.0.2"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/lib/pq"
+  packages = [
+    ".",
+    "oid"
+  ]
+  revision = "d6156e141ac6c06345c7c73f450987a9ed4b751f"
+
+[[projects]]
+  name = "github.com/mattn/go-sqlite3"
+  packages = ["."]
+  revision = "c7c4067b79cc51e6dfdcef5c702e74b1e0fa7c75"
+  version = "v1.10.0"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -38,6 +74,12 @@
   version = "v1.4.0"
 
 [[projects]]
+  name = "github.com/urfave/cli"
+  packages = ["."]
+  revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
+  version = "v1.20.0"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
@@ -52,9 +94,15 @@
   ]
   revision = "f7bb7a8bee54210937e93ec56d007d892c1f0580"
 
+[[projects]]
+  name = "google.golang.org/appengine"
+  packages = ["cloudsql"]
+  revision = "54a98f90d1c46b7731eb8fb305d2a321c30ef610"
+  version = "v1.5.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d503be7da5c0bb9b509bed56a53153557033395d73d82bd55d14df298bf63101"
+  inputs-digest = "161d1bee58b127af8348f44ce2421c2e0229e1f82d2dfa43ce34dd0bced78456"
   solver-name = "gps-cdcl"
   solver-version = 1

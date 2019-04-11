@@ -4,8 +4,8 @@ import (
 	"github.com/karuppaiah/gobodyguard/models"
 )
 
-// AuthDataStore defines operations expected from data storage entity
-type AuthDataStore interface {
+// AuthOpns defines operations exposed from domain layer
+type AuthOpns interface {
 	// Principal
 	GetPrincipal(uuid string) (models.Principal, error)
 	AddPrincipal(principal models.Principal) (models.Principal, error)
@@ -25,13 +25,18 @@ type AuthDataStore interface {
 	DeleteOperation(uuid string) error
 
 	// Policy
-	GetPolicy(uuid string) (models.Policy, error)
-	AddPolicy(policy models.Policy) (models.Policy, error)
-	UpdatePolicy(policy models.Policy) (models.Policy, error)
+	GrantPolicy(principalUUID string, resourceUUID string,
+		operationUUID string, tags []string, userName string) (models.Policy, error)
+	DenyPolicy(principalUUID string, resourceUUID string,
+		operationUUID string, tags []string, userName string) (models.Policy, error)
+	IsGranted(principalUUID string, resourceUUID string,
+		operationUUID string, tags string) (bool, error)
+	IsDenied(principalUUID string, resourceUUID string,
+		operationUUID string, tags string) (bool, error)
 	DeletePolicy(uuid string) error
 
 	// Tags
-	AddTagsToPolicy(uuid string, tags []string) error
-	RemoveTagsFromPolicy(uuid string, tag string) error
+	AddTagToPolicy(uuid string, tags string) error
+	RemoveTagFromPolicy(uuid string, tag string) error
 	SearchForTagInPolicy(tag []string) error
 }

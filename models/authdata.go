@@ -12,6 +12,7 @@ type Principal struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 	DeletedAt time.Time `json:"deletedAt"`
 	CreatedBy string    `json:"createdBy"`
+	UpdatedBy string    `json:"updatedBy"`
 }
 
 // Resource is understood to be a specific entity or container
@@ -23,6 +24,7 @@ type Resource struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 	DeletedAt time.Time `json:"deletedAt"`
 	CreatedBy string    `json:"createdBy"`
+	UpdatedBy string    `json:"updatedBy"`
 }
 
 // Operation is understood to be a specific function
@@ -34,66 +36,62 @@ type Operation struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 	DeletedAt time.Time `json:"deletedAt"`
 	CreatedBy string    `json:"createdBy"`
+	UpdatedBy string    `json:"updatedBy"`
 }
 
-// Permission that can be read as declarative statements using Principal, Resource and Operation
-type Permission struct {
-	UUID          string           `json:"uuid"`
-	Principal     Principal        `gorm:"foreignkey:PrincipalUUID;association_foreignkey:UUID"`
-	PrincipalUUID string           `json:"principalUUID"`
-	Resouce       Resource         `gorm:"foreignkey:ResourceUUID;association_foreignkey:UUID"`
-	ResourceUUID  string           `json:"resourceUUID"`
-	Operation     Operation        `gorm:"foreignkey:OperationUUID;association_foreignkey:UUID"`
-	OperationUUID string           `json:"operationUUID"`
-	AuthStatus    AuthStatusCode   `json:"authStatus"`
-	Tags          []PermissionTags `json:"tags" gorm:"foreignkey:PermissionUUID"`
+// Policy that can be read as declarative statements using Principal, Resource and Operation
+type Policy struct {
+	UUID          string               `json:"uuid"`
+	Principal     Principal            `gorm:"foreignkey:PrincipalUUID;association_foreignkey:UUID"`
+	PrincipalUUID string               `json:"principalUUID"`
+	Resouce       Resource             `gorm:"foreignkey:ResourceUUID;association_foreignkey:UUID"`
+	ResourceUUID  string               `json:"resourceUUID"`
+	Operation     Operation            `gorm:"foreignkey:OperationUUID;association_foreignkey:UUID"`
+	OperationUUID string               `json:"operationUUID"`
+	Permission    PermissionStatusCode `json:"authStatus"`
+	Tags          []string             `json:"tags" gorm:"foreignkey:PermissionUUID"`
 }
 
-// PermissionTags that can be attached to permission for further grouping and enhacement
-type PermissionTags struct {
-	UUID           string `json:"uuid"`
-	Tag            string `json:"tag"`
-	PermissionUUID string `json:"permissionUUID"`
-}
+// // PermissionTags that can be attached to permission for further grouping and enhacement
+// type PermissionTags struct {
+// 	UUID           string `json:"uuid"`
+// 	Tag            string `json:"tag"`
+// 	PermissionUUID string `json:"permissionUUID"`
+// }
 
-///////////// AuthStatusCode Action enum : START
+///////////// PermissionStatusCode Action enum : START
 
-// AuthStatusCode is the code used for auth status
-type AuthStatusCode int
+// PermissionStatusCode is the code used for auth status
+type PermissionStatusCode int
 
 const (
-	// Unknown is the state When something wierd happens but is equally treated like
-	// Denied
-	Unknown AuthStatusCode = iota
 	// Granted is the state When principal is specifically granted permission
 	// on resource for a operation
-	Granted
+	Granted PermissionStatusCode = iota
 	// Denied is the state When principal is specifically denied permission
 	// on resource for a operation
 	Denied
 )
 
-// AuthStatusCodeNames maps AuthStatusCodeCode to its string representation
-var AuthStatusCodeNames = map[AuthStatusCode]string{
-	Unknown: "Unknown",
+// PermissionStatusCodeNames maps PermissionStatusCode to its string representation
+var PermissionStatusCodeNames = map[PermissionStatusCode]string{
 	Granted: "Granted",
 	Denied:  "Denied",
 }
 
-// AuthStatusCodeIDs maps string to AuthStatusCode type
-var AuthStatusCodeIDs = map[string]AuthStatusCode{
-	"Unknown": Unknown,
+// PermissionStatusCodeIDs maps string to PermissionStatusCode type
+var PermissionStatusCodeIDs = map[string]PermissionStatusCode{
 	"Granted": Granted,
 	"Denied":  Denied,
 }
 
-// String will convert AuthStatusCode to string value
-func (a AuthStatusCode) String() string {
+// String will convert PermissionStatusCode to string value
+func (a PermissionStatusCode) String() string {
 	// Return unknown if type is outside of enum range
-	if _, ok := AuthStatusCodeNames[a]; ok {
-		return AuthStatusCodeNames[a]
+	if _, ok := PermissionStatusCodeNames[a]; ok {
+		return PermissionStatusCodeNames[a]
 	}
-	return AuthStatusCodeNames[Unknown]
+	return PermissionStatusCodeNames[Denied]
 }
 
-///////////// AuthStatusCode Action enum : END
+///////////// PermissionStatusCode Action enum : END
