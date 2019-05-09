@@ -24,19 +24,14 @@ type AuthOpns interface {
 	UpdateOperation(operation models.Operation) (models.Operation, error)
 	DeleteOperation(uuid string) error
 
-	// Policy
-	GrantPolicy(principalUUID string, resourceUUID string,
-		operationUUID string, tags []string, userName string) (models.Policy, error)
-	DenyPolicy(principalUUID string, resourceUUID string,
-		operationUUID string, tags []string, userName string) (models.Policy, error)
-	IsGranted(principalUUID string, resourceUUID string,
-		operationUUID string, tags string) (bool, error)
-	IsDenied(principalUUID string, resourceUUID string,
-		operationUUID string, tags string) (bool, error)
-	DeletePolicy(uuid string) error
+	// Permission
+	AddPermission(principalUUID string, resourceUUID string,
+		operationUUID string, userName string,
+		permissionCode string) (models.Policy, error)
+	DeletePermission(uuid string) error
 
-	// Tags
-	AddTagToPolicy(uuid string, tags string) error
-	RemoveTagFromPolicy(uuid string, tag string) error
-	SearchForTagInPolicy(tag []string) error
+	// Verification Policy
+	GetPermission(principalUUID string, resourceUUID string,
+		operationUUID string) (
+		models.PermissionStatusCode, error)
 }

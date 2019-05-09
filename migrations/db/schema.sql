@@ -126,54 +126,6 @@ CREATE TABLE public.schema_migrations (
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users (
-    id integer NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    deleted_at timestamp with time zone,
-    sub character varying(50) NOT NULL,
-    name character varying(250) NOT NULL,
-    given_name character varying(250) NOT NULL,
-    family_name character varying(250),
-    profile character varying(550),
-    picture character varying(550),
-    email character varying(350) NOT NULL,
-    email_verified boolean DEFAULT false NOT NULL,
-    gender character varying(550)
-);
-
-
---
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.users_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
-
-
---
--- Name: users id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
-
-
---
 -- Name: operations operations_pkey_; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -214,22 +166,6 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
--- Name: users users_email_uniq; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_email_uniq UNIQUE (email);
-
-
---
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
-
---
 -- Name: operations trigger_set_operations_updated_at; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -258,13 +194,6 @@ CREATE TRIGGER trigger_set_resources_updated_at BEFORE UPDATE ON public.resource
 
 
 --
--- Name: users trigger_users_updated_at; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER trigger_users_updated_at BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE PROCEDURE public.trigger_set_update_at_timestamp();
-
-
---
 -- PostgreSQL database dump complete
 --
 
@@ -274,5 +203,4 @@ CREATE TRIGGER trigger_users_updated_at BEFORE UPDATE ON public.users FOR EACH R
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20190227232621'),
     ('20190401054713');
