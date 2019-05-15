@@ -20,25 +20,24 @@ func NewAuthHandler(r *gin.Engine, db *gorm.DB) {
 		AuthUsecase: authUsecase,
 	}
 
-	r.GET("/operations/:uuid", handler.FetchOperation)
-	r.POST("/operations", handler.AddOperation)
-	r.PUT("/operations/:uuid", handler.UpdateOperation)
-	r.DELETE("/operations/:uuid", handler.DeleteOperation)
+	r.GET("/operation/:uuid", handler.FetchOperation)
+	r.POST("/operation", handler.AddOperation)
+	r.PUT("/operation/:uuid", handler.UpdateOperation)
+	r.DELETE("/operation/:uuid", handler.DeleteOperation)
 
-	r.GET("/resources/:uuid", handler.FetchResource)
-	r.POST("/resources", handler.AddResource)
-	r.PUT("/resources/:uuid", handler.UpdateResource)
-	r.DELETE("/resources/:uuid", handler.DeleteResource)
-
-	r.GET("/principal/:uuid", handler.FetchPrincipal)
-	r.POST("/principal", handler.AddPrincipal)
-	r.PUT("/principal/:uuid", handler.UpdatePrincipal)
-	r.DELETE("/principal/:uuid", handler.DeletePrincipal)
+	r.GET("/resource/:uuid", handler.FetchResource)
+	r.POST("/resource", handler.AddResource)
+	r.PUT("/resource/:uuid", handler.UpdateResource)
+	r.DELETE("/resource/:uuid", handler.DeleteResource)
 
 	r.GET("/principal/:uuid", handler.FetchPrincipal)
 	r.POST("/principal", handler.AddPrincipal)
 	r.PUT("/principal/:uuid", handler.UpdatePrincipal)
 	r.DELETE("/principal/:uuid", handler.DeletePrincipal)
+
+	r.GET("/permission/:puuid/:ruuid/:ouuid", handler.CheckPermission)
+	r.POST("/policy", handler.AddPolicy)
+	r.DELETE("/policy/:uuid", handler.DeletePolicy)
 }
 
 // FetchOperation will respond with the operation data for the uuid requested
