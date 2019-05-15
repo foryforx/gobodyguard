@@ -1,4 +1,4 @@
-package models
+package app
 
 const (
 	// NoRecordFound  represents Empty SQL rows

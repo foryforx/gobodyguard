@@ -1,4 +1,4 @@
-package models
+package app
 
 import (
 	"time"
@@ -6,37 +6,37 @@ import (
 
 // Principal represents the identity of a specific user or group of users.
 type Principal struct {
-	UUID      string    `json:"uuid"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-	DeletedAt time.Time `json:"deletedAt"`
-	CreatedBy string    `json:"createdBy"`
-	UpdatedBy string    `json:"updatedBy"`
+	UUID      string     `json:"uuid"`
+	Name      string     `json:"name"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `json:"deletedAt"`
+	CreatedBy string     `json:"createdBy"`
+	UpdatedBy string     `json:"updatedBy"`
 }
 
 // Resource is understood to be a specific entity or container
 // upon which permissions may be applied.
 type Resource struct {
-	UUID      string    `json:"uuid"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-	DeletedAt time.Time `json:"deletedAt"`
-	CreatedBy string    `json:"createdBy"`
-	UpdatedBy string    `json:"updatedBy"`
+	UUID      string     `json:"uuid"`
+	Name      string     `json:"name"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `json:"deletedAt"`
+	CreatedBy string     `json:"createdBy"`
+	UpdatedBy string     `json:"updatedBy"`
 }
 
 // Operation is understood to be a specific function
 // that may be performed by a Principal on a Resource
 type Operation struct {
-	UUID      string    `json:"uuid"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-	DeletedAt time.Time `json:"deletedAt"`
-	CreatedBy string    `json:"createdBy"`
-	UpdatedBy string    `json:"updatedBy"`
+	UUID      string     `json:"uuid"`
+	Name      string     `json:"name"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `json:"deletedAt"`
+	CreatedBy string     `json:"createdBy"`
+	UpdatedBy string     `json:"updatedBy"`
 }
 
 // Policy that can be read as declarative statements using Principal, Resource and Operation

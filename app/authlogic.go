@@ -1,9 +1,9 @@
-package domain
+package app
 
 import (
-	"github.com/karuppaiah/gobodyguard/helpers"
-	"github.com/karuppaiah/gobodyguard/models"
+	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 )
 
 // AuthLogic represents the entity which has connection to dependent modules
@@ -12,13 +12,14 @@ type AuthLogic struct {
 }
 
 // NewAuthLogic returns a service initialized with repository.
-func NewAuthLogic(authRepo AuthDataStore) AuthOpns {
+func NewAuthLogic(db *gorm.DB) AuthOpns {
+	var authRepo = NewAuthRepository(db)
 	return &AuthLogic{AuthRepo: authRepo}
 }
 
 // GetPrincipal will get the principal matching UUID
-func (a AuthLogic) GetPrincipal(UUID string) (models.Principal, error) {
-	var principal models.Principal
+func (a AuthLogic) GetPrincipal(UUID string) (Principal, error) {
+	var principal Principal
 	principal, err := a.AuthRepo.GetPrincipal(UUID)
 	if err != nil {
 		return principal, errors.Wrapf(err, "SVC:GetPrincipal failed")
@@ -27,8 +28,8 @@ func (a AuthLogic) GetPrincipal(UUID string) (models.Principal, error) {
 }
 
 // AddPrincipal will add a new principal from system
-func (a AuthLogic) AddPrincipal(principal models.Principal) (models.Principal, error) {
-	principal.UUID = helpers.NewUUID()
+func (a AuthLogic) AddPrincipal(principal Principal) (Principal, error) {
+	principal.UUID = NewUUID()
 	principal, err := a.AuthRepo.AddPrincipal(principal)
 	if err != nil {
 		return principal, errors.Wrapf(err, "SVC:AddPrincipal failed")
@@ -37,7 +38,7 @@ func (a AuthLogic) AddPrincipal(principal models.Principal) (models.Principal, e
 }
 
 // UpdatePrincipal will update the principal in the system
-func (a AuthLogic) UpdatePrincipal(principal models.Principal) (models.Principal, error) {
+func (a AuthLogic) UpdatePrincipal(principal Principal) (Principal, error) {
 	principal, err := a.AuthRepo.UpdatePrincipal(principal)
 	if err != nil {
 		return principal, errors.Wrapf(err, "SVC:UpdatePrincipal failed")
@@ -55,8 +56,8 @@ func (a AuthLogic) DeletePrincipal(UUID string) error {
 }
 
 // GetResource will get a the resource matching the UUID
-func (a AuthLogic) GetResource(UUID string) (models.Resource, error) {
-	var resource models.Resource
+func (a AuthLogic) GetResource(UUID string) (Resource, error) {
+	var resource Resource
 	resource, err := a.AuthRepo.GetResource(UUID)
 	if err != nil {
 		return resource, errors.Wrapf(err, "SVC:GetResource failed")
@@ -65,8 +66,8 @@ func (a AuthLogic) GetResource(UUID string) (models.Resource, error) {
 }
 
 // AddResource will add a new resource to the system
-func (a AuthLogic) AddResource(resource models.Resource) (models.Resource, error) {
-	resource.UUID = helpers.NewUUID()
+func (a AuthLogic) AddResource(resource Resource) (Resource, error) {
+	resource.UUID = NewUUID()
 	resource, err := a.AuthRepo.AddResource(resource)
 	if err != nil {
 		return resource, errors.Wrapf(err, "SVC:AddResource failed")
@@ -75,7 +76,7 @@ func (a AuthLogic) AddResource(resource models.Resource) (models.Resource, error
 }
 
 // UpdateResource will update the resource from system
-func (a AuthLogic) UpdateResource(resource models.Resource) (models.Resource, error) {
+func (a AuthLogic) UpdateResource(resource Resource) (Resource, error) {
 	resource, err := a.AuthRepo.UpdateResource(resource)
 	if err != nil {
 		return resource, errors.Wrapf(err, "SVC:UpdateResource failed")
@@ -93,8 +94,8 @@ func (a AuthLogic) DeleteResource(UUID string) error {
 }
 
 // GetOperation will get the operation matching with UUID
-func (a AuthLogic) GetOperation(UUID string) (models.Operation, error) {
-	var operation models.Operation
+func (a AuthLogic) GetOperation(UUID string) (Operation, error) {
+	var operation Operation
 	operation, err := a.AuthRepo.GetOperation(UUID)
 	if err != nil {
 		return operation, errors.Wrapf(err, "SVC:GetOperation failed")
@@ -103,17 +104,18 @@ func (a AuthLogic) GetOperation(UUID string) (models.Operation, error) {
 }
 
 // AddOperation will add a new operation to the system
-func (a AuthLogic) AddOperation(operation models.Operation) (models.Operation, error) {
-	operation.UUID = helpers.NewUUID()
+func (a AuthLogic) AddOperation(operation Operation) (Operation, error) {
+	operation.UUID = NewUUID()
+	log.Debugln(operation)
 	operation, err := a.AuthRepo.AddOperation(operation)
 	if err != nil {
-		return operation, errors.Wrapf(err, "SVC:AddPrincipal failed")
+		return operation, errors.Wrapf(err, "SVC:AddOperation failed")
 	}
 	return operation, nil
 }
 
 // UpdateOperation will update the operation from system
-func (a AuthLogic) UpdateOperation(operation models.Operation) (models.Operation, error) {
+func (a AuthLogic) UpdateOperation(operation Operation) (Operation, error) {
 	operation, err := a.AuthRepo.UpdateOperation(operation)
 	if err != nil {
 		return operation, errors.Wrapf(err, "SVC:UpdateOperation failed")
@@ -133,9 +135,9 @@ func (a AuthLogic) DeleteOperation(UUID string) error {
 // AddPermission will add a permission for the principal, operation and resource
 func (a AuthLogic) AddPermission(principalUUID string, resourceUUID string,
 	operationUUID string, userName string,
-	permissionCode string) (models.Policy, error) {
-	var policy models.Policy
-	policy.UUID = helpers.NewUUID()
+	permissionCode string) (Policy, error) {
+	var policy Policy
+	policy.UUID = NewUUID()
 	policy.PrincipalUUID = principalUUID
 	policy.ResourceUUID = resourceUUID
 	policy.OperationUUID = operationUUID
@@ -158,19 +160,19 @@ func (a AuthLogic) DeletePermission(UUID string) error {
 // GetPermission will get the permission for principal, resource and operation UUID
 func (a AuthLogic) GetPermission(principalUUID string, resourceUUID string,
 	operationUUID string) (
-	models.PermissionStatusCode, error) {
-	var policys = make([]models.Policy, 0)
+	PermissionStatusCode, error) {
+	var policys = make([]Policy, 0)
 	policys, err := a.AuthRepo.GetPolicyForAllMatch(principalUUID, resourceUUID, operationUUID)
 	if err != nil {
-		return models.Denied, errors.Wrapf(err, "SVC:GetOperation failed")
+		return Denied, errors.Wrapf(err, "SVC:GetOperation failed")
 	}
 	if len(policys) == 0 {
-		return models.Denied, nil
+		return Denied, nil
 	}
 	for _, policy := range policys {
-		if policy.Permission == models.Denied {
-			return models.Denied, nil
+		if policy.Permission == Denied {
+			return Denied, nil
 		}
 	}
-	return models.Granted, nil
+	return Granted, nil
 }

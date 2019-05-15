@@ -18,9 +18,9 @@ CREATE table principals (
     name text NOT NULL,
     created_at timestamp with time zone NOT NULL DEFAULT NOW(),
     updated_at timestamp with time zone NOT NULL DEFAULT NOW(),
-    deleted_at timestamp with time zone NULL DEFAULT NOW(),
-    created_by int NOT NULL, 
-    updated_by int NOT NULL
+    deleted_at timestamp with time zone NULL,
+    created_by text NOT NULL, 
+    updated_by text NOT NULL
 );
 
 CREATE TRIGGER trigger_set_principals_updated_at
@@ -34,9 +34,9 @@ CREATE table resources (
     name text NOT NULL,
     created_at timestamp with time zone NOT NULL DEFAULT NOW(),
     updated_at timestamp with time zone NOT NULL DEFAULT NOW(),
-    deleted_at timestamp with time zone NULL DEFAULT NOW(),
-    created_by int NOT NULL, 
-    updated_by int NOT NULL
+    deleted_at timestamp with time zone NULL,
+    created_by text NOT NULL, 
+    updated_by text NOT NULL
 );
 
 CREATE TRIGGER trigger_set_resources_updated_at
@@ -50,9 +50,9 @@ CREATE table operations (
     name text NOT NULL,
     created_at timestamp with time zone NOT NULL DEFAULT NOW(),
     updated_at timestamp with time zone NOT NULL DEFAULT NOW(),
-    deleted_at timestamp with time zone NULL DEFAULT NOW(),
-    created_by int NOT NULL, 
-    updated_by int NOT NULL
+    deleted_at timestamp with time zone NULL,
+    created_by text NOT NULL, 
+    updated_by text NOT NULL
 );
 
 CREATE TRIGGER trigger_set_operations_updated_at
@@ -68,9 +68,9 @@ CREATE table policys (
     operation_uuid uuid NOT NULL,
     created_at timestamp with time zone NOT NULL DEFAULT NOW(),
     updated_at timestamp with time zone NOT NULL DEFAULT NOW(),
-    deleted_at timestamp with time zone NULL DEFAULT NOW(),
-    created_by int NOT NULL, 
-    updated_by int NOT NULL
+    deleted_at timestamp with time zone NULL,
+    created_by text NOT NULL, 
+    updated_by text NOT NULL
 );
 
 CREATE TRIGGER trigger_set_policys_updated_at
