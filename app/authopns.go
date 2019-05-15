@@ -23,7 +23,7 @@ type AuthOpns interface {
 	// Permission
 	AddPermission(principalUUID string, resourceUUID string,
 		operationUUID string, userName string,
-		permissionCode string) (Policy, error)
+		permission string) (Policy, error)
 	DeletePermission(uuid string) error
 
 	// Verification Policy

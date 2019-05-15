@@ -3,6 +3,7 @@ package app
 import (
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 )
 
 type authStorage struct {
@@ -72,7 +73,7 @@ func (a *authStorage) GetResource(UUID string) (Resource, error) {
 // AddResource will add a new resource to data store
 func (a *authStorage) AddResource(resource Resource) (Resource, error) {
 	resource.DeletedAt = nil
-	err := a.Conn.Save(&resource).Error
+	err := a.Conn.Debug().Save(&resource).Error
 	if err != nil {
 		return resource, errors.Wrapf(err, "AddResource error %v", resource)
 	}
@@ -169,7 +170,7 @@ func (a *authStorage) GetPolicyForAllMatch(principalUUID string, resourceUUID st
 
 // AddPolicy will add a new policy to data store
 func (a *authStorage) AddPolicy(policy Policy) (Policy, error) {
-	err := a.Conn.Save(&policy).Error
+	err := a.Conn.Debug().Save(&policy).Error
 	if err != nil {
 		return policy, errors.Wrapf(err, "AddPolicy error %v", policy)
 	}
@@ -189,4 +190,42 @@ func (a *authStorage) UpdatePolicy(policy Policy) (Policy, error) {
 func (a *authStorage) DeletePolicy(UUID string) error {
 	err := a.Conn.Unscoped().Where("uuid::text = ?", UUID).Delete(&Policy{}).Error
 	return err
+}
+
+func (a *authStorage) LoadAccess() (map[string](map[string][]string), error) {
+	var operationAccess = make(map[string](map[string][]string))
+	type returnGroup struct {
+		PrincipalUUID string
+		ResourceUUID  string
+		OperationUUID string
+	}
+	var access = make(map[string][]string)
+	var rgs []returnGroup
+	err := a.Conn.Debug().Table("policies").
+		Select("principal_uuid, resource_uuid, operation_uuid").
+		Where("permission = 'Granted'").Find(&rgs).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return operationAccess, errors.Wrapf(err, "LoadAccess failed during fetch access")
+	}
+	if err == gorm.ErrRecordNotFound {
+		log.Warnln("LoadAccess no record found")
+	}
+	log.Println("length of rgs", len(rgs))
+	for _, rg := range rgs {
+		var resources []string
+		resources, ok := access[rg.PrincipalUUID]
+		if !ok {
+			resources = make([]string, 0)
+			access[rg.PrincipalUUID] = resources
+		}
+		access[rg.PrincipalUUID] = append(access[rg.PrincipalUUID], rg.ResourceUUID)
+		var accessPrincipal map[string][]string
+		accessPrincipal, ok = operationAccess[rg.OperationUUID]
+		if !ok {
+			accessPrincipal = make(map[string][]string)
+			operationAccess[rg.OperationUUID] = accessPrincipal
+		}
+		operationAccess[rg.OperationUUID][rg.PrincipalUUID] = resources
+	}
+	return operationAccess, nil
 }

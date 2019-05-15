@@ -60,26 +60,27 @@ BEFORE UPDATE ON operations
 FOR EACH ROW EXECUTE PROCEDURE trigger_set_update_at_timestamp();
 
 -- policies table
-CREATE table policys (
+CREATE table policies (
 	uuid  uuid NOT NULL DEFAULT uuid_generate_v1(),  
         CONSTRAINT policy_pkey_ PRIMARY KEY (uuid),
     principal_uuid uuid NOT NULL,
     resource_uuid uuid NOT NULL,
     operation_uuid uuid NOT NULL,
+    permission text NOT NULL,
     created_at timestamp with time zone NOT NULL DEFAULT NOW(),
     updated_at timestamp with time zone NOT NULL DEFAULT NOW(),
     deleted_at timestamp with time zone NULL,
-    created_by text NOT NULL, 
-    updated_by text NOT NULL
+    created_by text NOT NULL DEFAULT '', 
+    updated_by text NOT NULL DEFAULT ''
 );
 
-CREATE TRIGGER trigger_set_policys_updated_at
-BEFORE UPDATE ON policys
+CREATE TRIGGER trigger_set_policies_updated_at
+BEFORE UPDATE ON policies
 FOR EACH ROW EXECUTE PROCEDURE trigger_set_update_at_timestamp();
 
 -- migrate:down
-DROP TABLE policys;
-DROP TRIGGER IF EXISTS trigger_set_policies_updated_at ON policys;
+DROP TABLE policies;
+DROP TRIGGER IF EXISTS trigger_set_policies_updated_at ON policies;
 DROP TABLE operations;
 DROP TRIGGER IF EXISTS trigger_set_operations_updated_at ON operations;
 DROP TABLE resources;

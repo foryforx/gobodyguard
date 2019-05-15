@@ -15,7 +15,6 @@ func setupRouter() *gin.Engine {
 		c.String(http.StatusOK, "pong")
 	})
 	return r
-
 }
 
 func main() {
@@ -23,5 +22,7 @@ func main() {
 	db := app.GetDBInstance()
 	// Dependency injection and route setting
 	app.NewAuthHandler(r, db.DB)
+	app.GetConfig()
+	app.GetMemData()
 	r.Run(":5422")
 }

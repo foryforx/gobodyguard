@@ -41,15 +41,14 @@ type Operation struct {
 
 // Policy that can be read as declarative statements using Principal, Resource and Operation
 type Policy struct {
-	UUID          string               `json:"uuid"`
-	Principal     Principal            `gorm:"foreignkey:PrincipalUUID;association_foreignkey:UUID"`
-	PrincipalUUID string               `json:"principalUUID"`
-	Resouce       Resource             `gorm:"foreignkey:ResourceUUID;association_foreignkey:UUID"`
-	ResourceUUID  string               `json:"resourceUUID"`
-	Operation     Operation            `gorm:"foreignkey:OperationUUID;association_foreignkey:UUID"`
-	OperationUUID string               `json:"operationUUID"`
-	Permission    PermissionStatusCode `json:"authStatus"`
-	Tags          []string             `json:"tags" gorm:"foreignkey:PermissionUUID"`
+	UUID          string    `json:"uuid"`
+	Principal     Principal `gorm:"foreignkey:PrincipalUUID;association_foreignkey:UUID"`
+	PrincipalUUID string    `json:"principalUUID"`
+	Resouce       Resource  `gorm:"foreignkey:ResourceUUID;association_foreignkey:UUID"`
+	ResourceUUID  string    `json:"resourceUUID"`
+	Operation     Operation `gorm:"foreignkey:OperationUUID;association_foreignkey:UUID"`
+	OperationUUID string    `json:"operationUUID"`
+	Permission    string    `json:"authStatus"`
 }
 
 // // PermissionTags that can be attached to permission for further grouping and enhacement

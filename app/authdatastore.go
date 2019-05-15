@@ -27,4 +27,6 @@ type AuthDataStore interface {
 	AddPolicy(policy Policy) (Policy, error)
 	UpdatePolicy(policy Policy) (Policy, error)
 	DeletePolicy(UUID string) error
+
+	LoadAccess() (map[string](map[string][]string), error)
 }

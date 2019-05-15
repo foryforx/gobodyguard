@@ -275,7 +275,7 @@ func (h *AuthHandler) AddPolicy(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return
 	}
-	policy, err = h.AuthUsecase.AddPermission(policy.PrincipalUUID, policy.ResourceUUID, policy.OperationUUID, "", policy.Permission.String())
+	policy, err = h.AuthUsecase.AddPermission(policy.PrincipalUUID, policy.ResourceUUID, policy.OperationUUID, "", policy.Permission)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

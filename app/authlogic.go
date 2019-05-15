@@ -135,15 +135,16 @@ func (a AuthLogic) DeleteOperation(UUID string) error {
 // AddPermission will add a permission for the principal, operation and resource
 func (a AuthLogic) AddPermission(principalUUID string, resourceUUID string,
 	operationUUID string, userName string,
-	permissionCode string) (Policy, error) {
+	permission string) (Policy, error) {
 	var policy Policy
 	policy.UUID = NewUUID()
 	policy.PrincipalUUID = principalUUID
 	policy.ResourceUUID = resourceUUID
 	policy.OperationUUID = operationUUID
+	policy.Permission = permission
 	policy, err := a.AuthRepo.AddPolicy(policy)
 	if err != nil {
-		return policy, errors.Wrapf(err, "SVC:Addpolicy failed")
+		return policy, errors.Wrapf(err, "SVC:AddPermission failed")
 	}
 	return policy, nil
 }
@@ -161,18 +162,21 @@ func (a AuthLogic) DeletePermission(UUID string) error {
 func (a AuthLogic) GetPermission(principalUUID string, resourceUUID string,
 	operationUUID string) (
 	PermissionStatusCode, error) {
-	var policys = make([]Policy, 0)
-	policys, err := a.AuthRepo.GetPolicyForAllMatch(principalUUID, resourceUUID, operationUUID)
-	if err != nil {
-		return Denied, errors.Wrapf(err, "SVC:GetOperation failed")
-	}
-	if len(policys) == 0 {
+	// var policys = make([]Policy, 0)
+	// policys, err := a.AuthRepo.GetPolicyForAllMatch(principalUUID, resourceUUID, operationUUID)
+	opnsAccess := GetMemData().OperationAccess
+	access, ok := opnsAccess[operationUUID]
+	if !ok {
 		return Denied, nil
 	}
-	for _, policy := range policys {
-		if policy.Permission == Denied {
-			return Denied, nil
+	resources, ok := access[principalUUID]
+	if !ok {
+		return Denied, nil
+	}
+	for _, v := range resources {
+		if v == resourceUUID {
+			return Granted, nil
 		}
 	}
-	return Granted, nil
+	return Denied, nil
 }
